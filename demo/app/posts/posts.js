@@ -6,20 +6,20 @@ var postsArea = BlogApp.Area('post',{
 });
 
 var latestPostsSource = postsArea.HttpSource(postsArea, 'latestPosts', {
-
-    method: 'GET',
+    sourcetype:  'restful',
     url: '/posts',
-    params: null,
-    on:{
-        before: function(params) { },
-        after: function(result) {
-
-            return {
-                posts: result
-            };
-        }
+    read: { //read
+        method: 'GET',
+        params: null,
+        on: {
+            after: function(result) {
+                return {
+                    posts: result
+                };
+            }
+        },
+        cache: false
     },
-    cache: false
 });
 
 var latestPostsPartial = postsArea.Partial(postsArea, 'latestPosts', {

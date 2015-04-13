@@ -68,9 +68,7 @@ var HydrogenPartialView = function(parent, name, configuration){
      * @param {String} destinationSelector Selector for the destination HTML element(s)
      */
     this.render = function(destinationSelector){
-
         partialView.configuration.source.fetch(function(data){
-
             var
                 basePath = partialView.parent.configuration.templatePath,
                 templateName = partialView.configuration.templateName,

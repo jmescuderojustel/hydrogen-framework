@@ -6,19 +6,20 @@ var BlogApp = new HydrogenApplication('BlogApp',{
 });
 
 var allUsersSource = BlogApp.HttpSource(BlogApp, 'allUsers', {
-
-    method: 'GET',
+    sourcetype:  'restful',
     url: '/users',
-    params: null,
-    on: {
-        after: function(result) {
-
-            return {
-                users: result
-            };
-        }
-    },
-    cache: false
+    read: { //read
+        method: 'GET',
+        params: null,
+        on: {
+            after: function(result) {
+                return {
+                    users: result
+                };
+            }
+        },
+        cache: false
+    }
 });
 
 var menuSource = BlogApp.LocalSource('menu', {
@@ -41,7 +42,6 @@ var usersWithPostPartial = BlogApp.Partial(BlogApp, 'menu', {
 });
 
 $(function(){
-
     BlogApp.Navigation([
 
         { url: '#users', page: usersPage },

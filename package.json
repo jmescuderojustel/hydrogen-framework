@@ -2,6 +2,18 @@
   "name": "Hydrogen_Framework",
   "description": "Simple and basic framework for developing web applications",
   "version": "0.0.1",
+  "homepage": "https://github.com/jmescuderojustel/hydrogen-framework",
+  "author": {
+    "name"  : "Jesus Maria Escudero",
+    "email" : "jm.escudero.justel@gmail.com"
+  },
+  "repository" : {
+    "type" : "git",
+    "url"  : "git://github.com/jmescuderojustel/hydrogen-framework.git"
+  }, 
+  "bugs" : {
+    "url" : "https://github.com/jmescuderojustel/hydrogen-framework/issues"
+  },
   "private": true,
   "dependencies": {
     "grunt": "~0.4.5",
@@ -11,6 +23,11 @@
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-contrib-yuidoc": "^0.5.2",
-    "grunt-http-server": "0.0.5"
+    "grunt-http-server": "0.0.5",
+    "grunt-contrib-jasmine": "~0.4.0",
+    "grunt-contrib-jshint": "~0.2.0"
+  },
+  "scripts": {
+    "test": "grunt travis --verbose"
   }
 }

@@ -1,5 +1,6 @@
 # Hydrogen Framework: developers' guide
-=======================================
+
+[![Build Status](https://travis-ci.org/raul-arrieta/hydrogen-framework.svg?branch=master)](https://travis-ci.org/raul-arrieta/hydrogen-framework)
 
 ## Requirements for development
 

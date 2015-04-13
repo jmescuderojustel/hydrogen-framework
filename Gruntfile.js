@@ -20,6 +20,15 @@ module.exports = function(grunt) {
                 }
             }
         },
+        jasmine : {
+          src : 'source/**/*.js',
+          options : {
+            specs : 'spec/**/*.js',
+            vendor: [
+                "bower_components/jquery/dist/jquery.js"
+            ]
+          }
+        },
         copy: {
             source: { expand: true, cwd: "dist", src: ["**/*.min.js"], dest: "demo/lib/js" },
             jquery: { expand: true, cwd: "bower_components/jquery/dist", src: ["*.min.js", "*.min.map"], dest: "demo/lib/js" },
@@ -44,17 +53,18 @@ module.exports = function(grunt) {
             source: {
                 // Validate source code against the jshintrc file"s rules
                 src: [
-                    "source/**/*.js"
+                    "source/**/*.js",
+                    "spec/**/*.js"
                 ],
                 options: {
-                    jshintrc: true
+                    jshintrc: './.jshintrc'
                 }
             }
         },
         watch: {
             source: {
-                files: ["source/**/*.*"],
-                tasks: ["jshint", "clean:demo", "copy"],
+                files: ["source/**/*.*", '<config:jasmine.specs>'],
+                tasks: ["jshint", "clean:demo", "copy", "jasmine"],
                 options: {
                     spawn: false
                 }
@@ -89,6 +99,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-yuidoc");
 
+    grunt.loadNpmTasks('grunt-contrib-jasmine');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+
     grunt.initConfig(config);
 
     grunt.registerTask("default", [
@@ -100,6 +113,8 @@ module.exports = function(grunt) {
         "watch:source"
     ]);
 
+    grunt.registerTask('test', ['jshint', 'jasmine']);
+
     grunt.registerTask("distrib", [
         "jshint",
         "clean:dist",
@@ -107,4 +122,13 @@ module.exports = function(grunt) {
         "yuidoc"
     ]);
 
+    // Travis CI task.
+    grunt.registerTask('travis', [
+        "jshint",
+        "jasmine",
+        "clean:demo",
+        "concat:dist",
+        "copy",
+        "http-server:dev"
+    ]);
 };
