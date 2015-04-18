@@ -11,3 +11,7 @@ dist
 bower_components
 
 documentation
+
+.sublime-grunt.cache
+
+.grunt/

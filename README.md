@@ -1,6 +1,9 @@
 # Hydrogen Framework: users' guide
-
 [![Build Status](https://travis-ci.org/raul-arrieta/hydrogen-framework.svg?branch=master)](https://travis-ci.org/raul-arrieta/hydrogen-framework)
+[![Coverage Status](https://coveralls.io/repos/raul-arrieta/hydrogen-framework/badge.svg)](https://coveralls.io/r/raul-arrieta/hydrogen-framework)
+[![Code Climate](https://codeclimate.com/github/raul-arrieta/hydrogen-framework/badges/gpa.svg)](https://codeclimate.com/github/raul-arrieta/hydrogen-framework)
+
+[![Dependencies](https://david-dm.org/raul-arrieta/hydrogen-framework.svg)](https://david-dm.org/raul-arrieta/hydrogen-framework)
 
 *If you're looking for the* **developers' version** *of the README file, please refer to 
 [README for developers](README_developers.md) file*
