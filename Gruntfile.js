@@ -63,8 +63,8 @@ module.exports = function(grunt) {
         },
         watch: {
             source: {
-                files: ["source/**/*.*", '<config:jasmine.specs>'],
-                tasks: ["jshint", "clean:demo", "copy", "jasmine"],
+                files: ["source/**/*.*"],
+                tasks: ["jshint", "clean:demo", "copy"],
                 options: {
                     spawn: false
                 }
@@ -98,7 +98,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-yuidoc");
-
     grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-contrib-jshint');
 

@@ -33,7 +33,7 @@ var HydrogenPartialViewsManager = function(){
  * @param {HydrogenPartialViewConfiguration} configuration Partial page's configuration
  * @constructor
  */
-var HydrogenPartialView = function(parent, name, configuration){
+var HydrogenPartialView = function (parent, name, configuration){
 
     var partialView = this;
 
@@ -67,25 +67,91 @@ var HydrogenPartialView = function(parent, name, configuration){
      * @method render
      * @param {String} destinationSelector Selector for the destination HTML element(s)
      */
-    this.render = function(destinationSelector){
-        partialView.configuration.source.fetch(function(data){
-            var
-                basePath = partialView.parent.configuration.templatePath,
-                templateName = partialView.configuration.templateName,
-                extension = partialView.parent.configuration.templateExtension,
-                templateUrl = basePath + '/' + templateName + '.' + extension;
+    this.render = function (destinationSelector){
 
+        var
+            basePath = partialView.parent.configuration.templatePath,
+            templateName = partialView.configuration.templateName,
+            extension = partialView.parent.configuration.templateExtension,
+            templateUrl = basePath + '/' + templateName + '.' + extension;
+
+        if (partialView.configuration.source) {
+
+            // In case we have sources for data
+            partialView.configuration.source.fetch(function (data) {
+
+                $.ajax({
+                    method: 'GET',
+                    url: templateUrl,
+                    success: function (html) {
+
+                        var innerHtml = Mustache.render(html, data);
+
+                        $(destinationSelector)
+                            .html(innerHtml)
+                            .promise()
+                            .done(function(){
+
+                                partialView.configureEvents($(destinationSelector));
+                            });
+                    }
+                });
+            });
+        }
+        else{
+
+            // No data involved, just render the HTML
             $.ajax({
                 method: 'GET',
                 url: templateUrl,
-                success: function(html){
+                success: function (innerHtml) {
 
-                    var innerHtml = Mustache.render(html, data);
+                    $(destinationSelector)
+                        .html(innerHtml)
+                        .promise()
+                        .done(function(){
 
-                    $(destinationSelector).html(innerHtml);
+                            partialView.configureEvents($(destinationSelector));
+                        });
                 }
             });
-        });
+        }
+    };
+
+    /**
+     * Configures all the events that can take place inside the elements owned by an specific element
+     *
+     * @method configureEvents
+     * @param {jQuery} $destination jQuery element that owns the DOM elements that will get events assigned
+     */
+    this.configureEvents = function ($destination){
+
+        var configuredEvents = partialView.configuration.events;
+
+        if (configuredEvents){
+
+            // If events for this partial are configured
+            for (var event in configuredEvents){
+
+                // Iterate all events
+                if (configuredEvents.hasOwnProperty(event)) {
+
+                    // Iterate all elements for which I want to configure the event
+                    for (var itemAffectedByEvent in configuredEvents[event]) {
+
+                        if (configuredEvents[event].hasOwnProperty(itemAffectedByEvent)) {
+
+                            var
+                                $destinationElement = $(itemAffectedByEvent, $destination),
+                                functionOnEvent = configuredEvents[event][itemAffectedByEvent];
+
+                            // First, unbind to avoid multiple event assignment
+                            $destinationElement.unbind(event).bind(event, functionOnEvent);
+                        }
+                    }
+                }
+            }
+        }
     };
 };
 
@@ -95,7 +161,7 @@ var HydrogenPartialView = function(parent, name, configuration){
  * @class HydrogenPartialViewConfiguration
  * @constructor
  */
-var HydrogenPartialViewConfiguration = function(){
+var HydrogenPartialViewConfiguration = function (){
 
     /**
      * Path where template are located

@@ -25,7 +25,8 @@ var allUsersSource = BlogApp.HttpSource(BlogApp, 'allUsers', {
 var menuSource = BlogApp.LocalSource('menu', {
     options: [
         { name: 'Posts', link: '#'},
-        { name: 'Users', link: '#users'}
+        { name: 'Users', link: '#users'},
+        { name: 'Contact us', link: '#contact'}
     ]
 });
 
@@ -44,6 +45,8 @@ var usersWithPostPartial = BlogApp.Partial(BlogApp, 'menu', {
 $(function(){
     BlogApp.Navigation([
 
+        { url: '#contact', page: contactPage },
+        { url: '#contactSent', page: contactSentPage },
         { url: '#users', page: usersPage },
         { url: '', page: homePage }
     ]);

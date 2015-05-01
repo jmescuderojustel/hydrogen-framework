@@ -32,7 +32,7 @@ a single area, it will be accessible only to other resources, pages, partial vie
 resources, pages, partial views,... to the **Application** level, make them accessible through all areas. You should 
 find the equilibrium between the two scenarios.
 
-## DISCLOSURE
+## DISCLAIMER
 
 This framework is a tool for helping developers. The developer that will get helped most is me, as I am learning a lot
 about javascript and web development through this project. If it also helps anyone else and allows you to get one single

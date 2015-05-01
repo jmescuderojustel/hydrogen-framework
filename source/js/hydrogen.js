@@ -35,7 +35,7 @@ var HydrogenApplication = function(name, configuration){
     this._pageManager = new HydrogenPageManager();
     this.Page = this._pageManager.Page;
 
-    this.Navigation = function(routes){
+    this.Navigation = function (routes){
 
         _navigation = new HydrogenNavigation(routes);
 
@@ -56,7 +56,7 @@ var HydrogenApplication = function(name, configuration){
      * @param {Object} configuration Area's configuration
      * @return {Object} Returns an HydrogenArea object
      */
-    this.Area = function(name, configuration){
+    this.Area = function (name, configuration){
 
         var new_area = new HydrogenArea(name, configuration);
 
@@ -65,5 +65,10 @@ var HydrogenApplication = function(name, configuration){
         _areas.push(new_area);
 
         return new_area;
+    };
+
+    this.navigateToUrl = function (url){
+
+        _navigation.navigateToUrl(url);
     };
 };

@@ -6,12 +6,12 @@ var HydrogenNavigation = function(routes){
 
     this.routes = routes || [];
 
-    this.navigateTo = function(page){
+    this.navigateTo = function (page){
 
         page.load();
     };
 
-    this.navigateToUrl = function(url){
+    this.navigateToUrl = function (url){
 
         for (var routeCounter = 0, totalRoutes = navigation.routes.length;
              routeCounter < totalRoutes;
