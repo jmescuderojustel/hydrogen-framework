@@ -1,5 +1,5 @@
 /*exported HydrogenPartialView, HydrogenPartialViewsManager, HydrogenPartialViewConfiguration */
-/*global Mustache */
+/*global Mustache, _ */
 
 /**
  * This represents the manager for partial views
@@ -62,6 +62,15 @@ var HydrogenPartialView = function (parent, name, configuration){
     this.parent = parent;
 
     /**
+     * List of validations that can be done in this view
+     *
+     * @private
+     * @property _validations
+     * @type Array
+     */
+    this._validations = [];
+
+    /**
      * Renders this partial view inside an HTML element (or several of them), defined via a jQuery selector
      *
      * @method render
@@ -89,7 +98,7 @@ var HydrogenPartialView = function (parent, name, configuration){
 
                         $(destinationSelector)
                             .html(innerHtml)
-                            .promise()
+                            .promise()          // Wait for HTML being completely loaded
                             .done(function(){
 
                                 partialView.configureEvents($(destinationSelector));
@@ -108,10 +117,12 @@ var HydrogenPartialView = function (parent, name, configuration){
 
                     $(destinationSelector)
                         .html(innerHtml)
-                        .promise()
+                        .promise()          // Wait for HTML being completely loaded
                         .done(function(){
 
                             partialView.configureEvents($(destinationSelector));
+
+                            partialView.configureValidations($(destinationSelector));
                         });
                 }
             });
@@ -152,6 +163,109 @@ var HydrogenPartialView = function (parent, name, configuration){
                 }
             }
         }
+    };
+
+    /**
+     * Configures all the validations that have to be applied to the elements owned by an specific element
+     *
+     * @method configureValidations
+     * @param {jQuery} $destination jQuery element that owns the DOM elements that will get validation configured
+     */
+    this.configureValidations = function ($destination){
+
+        var configuredValidations = partialView.configuration.validations;
+
+        if (configuredValidations){
+
+            // If events for this partial are configured
+            for (var validation in configuredValidations){
+
+                // Iterate all events
+                if (configuredValidations.hasOwnProperty(validation)) {
+
+                    if (Array.isArray(configuredValidations[validation])){
+
+                        // There are many items to be validated with this rule
+                        _.each(configuredValidations[validation], function (validationConfiguration){
+
+                            partialView._validations.push({
+                                validation: validation,
+                                $item: $(validationConfiguration, $destination)
+                            });
+                        });
+                    }
+                    else{
+
+                        // There is just on item to validate
+                        partialView._validations.push({
+                            validation: validation,
+                            $item: $(configuredValidations[validation], $destination)
+                        });
+                    }
+                }
+            }
+        }
+    };
+
+    this.isValid = function (){
+
+        var isViewValid = true,
+
+            validationFunctions = {
+
+                email: function ($item){
+
+                    var emailRegularExpression = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i,
+                        isEmailValid = emailRegularExpression.test($item.val());
+
+                    if (!isEmailValid){
+
+                        isViewValid = false;
+                    }
+                },
+                required: function($item){
+
+                    var isItemPresent = ($item.val() !== '');
+
+                    if (!isItemPresent){
+
+                        isViewValid = false;
+                    }
+                },
+                checked: function($item){
+
+                    var isChecked = $item.is(':checked');
+
+                    if (!isChecked){
+
+                        isViewValid = false;
+                    }
+                }
+            };
+
+        // Iterate all the validations to find out if any is not met
+        _.each(partialView._validations, function(validationConfiguration){
+
+            switch (validationConfiguration.validation){
+
+                case 'email':
+
+                    validationFunctions.email(validationConfiguration.$item);
+                    break;
+
+                case 'required':
+
+                    validationFunctions.required(validationConfiguration.$item);
+                    break;
+
+                case 'checked':
+
+                    validationFunctions.checked(validationConfiguration.$item);
+                    break;
+            }
+        });
+
+        return isViewValid;
     };
 };
 

@@ -7,12 +7,19 @@ var contactArea = BlogApp.Area('contact',{
 var contactFormPartial = contactArea.Partial(contactArea, 'contactFormPartial', {
 
     templateName: 'contact-form',
-    events:{
+    events: {
 
         click: {
             'button': function (){
 
-                BlogApp.navigateToUrl('#contactSent');
+                if (contactFormPartial.isValid()) {
+
+                    BlogApp.navigateToUrl('#contactSent');
+                }
+                else{
+
+                    alert('Form is not valid!');
+                }
             },
             '#email': function (){
 
@@ -31,6 +38,12 @@ var contactFormPartial = contactArea.Partial(contactArea, 'contactFormPartial', 
                 $('#numberOfChars').text($('#email').val().length);
             }
         }
+    },
+    validations: {
+
+        email: '#email',
+        required: ['#email', '#comment'],
+        checked: '#agreePrivacyConditions'
     }
 });
 

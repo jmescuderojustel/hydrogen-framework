@@ -1,4 +1,4 @@
-/*exported HydrogenApplication */
+/*exported HydrogenApplication, _ */
 /*global HydrogenHttpSourceManager, HydrogenLocalSourceManager, HydrogenPartialViewsManager, HydrogenArea, HydrogenPageManager, HydrogenNavigation */
 
 /**
@@ -71,4 +71,17 @@ var HydrogenApplication = function(name, configuration){
 
         _navigation.navigateToUrl(url);
     };
+};
+
+var _ = {
+
+    each: function (array, callback){
+
+        array = array || [];
+
+        for (var counter = 0, total = array.length; counter < total; counter++) {
+
+            callback(array[counter]);
+        }
+    }
 };
