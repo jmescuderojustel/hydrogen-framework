@@ -40,9 +40,12 @@ module.exports = function(grunt) {
         concat: {
             options: { separator: ";" },
             dist: { src: [
+                "source/js/hydrogen.tools.js",
                 "source/js/hydrogen.source.http.js",
                 "source/js/hydrogen.source.local.js",
                 "source/js/hydrogen.partialView.js",
+                "source/js/hydrogen.partialView.validation.js",
+                "source/js/hydrogen.partialView.events.js",
                 "source/js/hydrogen.navigation.js",
                 "source/js/hydrogen.page.js",
                 "source/js/hydrogen.area.js",

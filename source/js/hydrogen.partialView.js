@@ -1,5 +1,5 @@
 /*exported HydrogenPartialView, HydrogenPartialViewsManager, HydrogenPartialViewConfiguration */
-/*global Mustache, _ */
+/*global Mustache, HydrogenPartialViewsValidation, HydrogenPartialViewsEvents */
 
 /**
  * This represents the manager for partial views
@@ -135,137 +135,31 @@ var HydrogenPartialView = function (parent, name, configuration){
      * @method configureEvents
      * @param {jQuery} $destination jQuery element that owns the DOM elements that will get events assigned
      */
-    this.configureEvents = function ($destination){
+    this.configureEvents = function($destination){
 
-        var configuredEvents = partialView.configuration.events;
-
-        if (configuredEvents){
-
-            // If events for this partial are configured
-            for (var event in configuredEvents){
-
-                // Iterate all events
-                if (configuredEvents.hasOwnProperty(event)) {
-
-                    // Iterate all elements for which I want to configure the event
-                    for (var itemAffectedByEvent in configuredEvents[event]) {
-
-                        if (configuredEvents[event].hasOwnProperty(itemAffectedByEvent)) {
-
-                            var
-                                $destinationElement = $(itemAffectedByEvent, $destination),
-                                functionOnEvent = configuredEvents[event][itemAffectedByEvent];
-
-                            // First, unbind to avoid multiple event assignment
-                            $destinationElement.unbind(event).bind(event, functionOnEvent);
-                        }
-                    }
-                }
-            }
-        }
+        HydrogenPartialViewsEvents.configureEvents(partialView, $destination);
     };
 
     /**
-     * Configures all the validations that have to be applied to the elements owned by an specific element
+     * Configures all the validations that have to be applied to the elements owned by an specific element in this
+     * partial view
      *
      * @method configureValidations
      * @param {jQuery} $destination jQuery element that owns the DOM elements that will get validation configured
      */
-    this.configureValidations = function ($destination){
+    this.configureValidations = function($destination){
 
-        var configuredValidations = partialView.configuration.validations;
-
-        if (configuredValidations){
-
-            // If events for this partial are configured
-            for (var validation in configuredValidations){
-
-                // Iterate all events
-                if (configuredValidations.hasOwnProperty(validation)) {
-
-                    if (Array.isArray(configuredValidations[validation])){
-
-                        // There are many items to be validated with this rule
-                        _.each(configuredValidations[validation], function (validationConfiguration){
-
-                            partialView._validations.push({
-                                validation: validation,
-                                $item: $(validationConfiguration, $destination)
-                            });
-                        });
-                    }
-                    else{
-
-                        // There is just on item to validate
-                        partialView._validations.push({
-                            validation: validation,
-                            $item: $(configuredValidations[validation], $destination)
-                        });
-                    }
-                }
-            }
-        }
+        return HydrogenPartialViewsValidation.configureValidations(partialView, $destination);
     };
 
-    this.isValid = function (){
+    /**
+     * Indicates whether the current partial view meets all requirements defined in validations
+     *
+     * @method isValid
+     */
+    this.isValid = function(){
 
-        var isViewValid = true,
-
-            validationFunctions = {
-
-                email: function ($item){
-
-                    var emailRegularExpression = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i,
-                        isEmailValid = emailRegularExpression.test($item.val());
-
-                    if (!isEmailValid){
-
-                        isViewValid = false;
-                    }
-                },
-                required: function($item){
-
-                    var isItemPresent = ($item.val() !== '');
-
-                    if (!isItemPresent){
-
-                        isViewValid = false;
-                    }
-                },
-                checked: function($item){
-
-                    var isChecked = $item.is(':checked');
-
-                    if (!isChecked){
-
-                        isViewValid = false;
-                    }
-                }
-            };
-
-        // Iterate all the validations to find out if any is not met
-        _.each(partialView._validations, function(validationConfiguration){
-
-            switch (validationConfiguration.validation){
-
-                case 'email':
-
-                    validationFunctions.email(validationConfiguration.$item);
-                    break;
-
-                case 'required':
-
-                    validationFunctions.required(validationConfiguration.$item);
-                    break;
-
-                case 'checked':
-
-                    validationFunctions.checked(validationConfiguration.$item);
-                    break;
-            }
-        });
-
-        return isViewValid;
+        return HydrogenPartialViewsValidation.isValid(partialView);
     };
 };
 

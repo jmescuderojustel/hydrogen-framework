@@ -12,13 +12,22 @@ var contactFormPartial = contactArea.Partial(contactArea, 'contactFormPartial', 
         click: {
             'button': function (){
 
-                if (contactFormPartial.isValid()) {
+                var validation = contactFormPartial.isValid();
+
+                if (validation.result) {
 
                     BlogApp.navigateToUrl('#contactSent');
                 }
                 else{
 
-                    alert('Form is not valid!');
+                    var itemsWithError = '';
+
+                    _.each(validation.fieldsWithError, function(item){
+
+                        itemsWithError += item.id + '(' + item.error + ')\r\n';
+                    });
+
+                    alert('Form is not valid!\r\n' + itemsWithError);
                 }
             },
             '#email': function (){
